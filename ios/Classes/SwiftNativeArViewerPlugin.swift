@@ -1,6 +1,7 @@
 import Flutter
 import UIKit
 import QuickLook
+import ARKit
 
 public class SwiftNativeArViewerPlugin: NSObject, FlutterPlugin {
   public static func register(with registrar: FlutterPluginRegistrar) {
@@ -36,6 +37,9 @@ public class SwiftNativeArViewerPlugin: NSObject, FlutterPlugin {
   }
 }
 class QuickLookViewController: UIViewController, QLPreviewControllerDataSource {
+
+      let allowsContentScaling = true
+    let canonicalWebPageURL = URL(string: "https://github.com/ynagatomo/ARQLSanta")
     
     var urlsOfResources: [String]
     var shownResource: Bool = false
@@ -65,7 +69,10 @@ class QuickLookViewController: UIViewController, QLPreviewControllerDataSource {
     }
     
     func previewController(_ controller: QLPreviewController, previewItemAt index: Int) -> QLPreviewItem {
-        let url = URL(string: self.urlsOfResources[index])!
-        return url as QLPreviewItem
+   let url =  URL(string: self.urlsOfResources[index])!
+        let previewItem = ARQuickLookPreviewItem(fileAt: url)
+        previewItem.allowsContentScaling = allowsContentScaling // default = true
+        previewItem.canonicalWebPageURL = canonicalWebPageURL   // default = nil
+        return previewItem
     }
 }
